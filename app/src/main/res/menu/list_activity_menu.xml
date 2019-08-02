@@ -6,4 +6,9 @@
         android:id="@+id/action_insert"
         android:title="@string/new_deal_menu"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="@string/logout_menu"
+        app:showAsAction="never" />
 </menu>

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +26,7 @@ public class DealActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
 
-        FirebaseUtil.openFirebaseReference("traveldeals");
+        //FirebaseUtil.openFirebaseReference("traveldeals");
         mFirebaseDatabase = FirebaseUtil.mFirebaseDatabase;
         mDatabaseReference = FirebaseUtil.mDatabaseReference;
 
@@ -50,6 +51,15 @@ public class DealActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.save_menu, menu);
+        if (FirebaseUtil.isAdmin) {
+            menu.findItem(R.id.action_save).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
+            enableTextFields(true);
+        } else {
+            menu.findItem(R.id.action_save).setVisible(false);
+            menu.findItem(R.id.action_delete).setVisible(false);
+            enableTextFields(false);
+        }
         return true;
     }
 
@@ -58,8 +68,15 @@ public class DealActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 saveDeal();
-                showSnackbar("Deal Saved");
+                showToastMessage("Deal saved");
                 clean();
+                backToListActivity();
+                return true;
+
+            case R.id.action_delete:
+                deleteDeal();
+                showToastMessage("Deal deleted");
+                backToListActivity();
                 return true;
 
             default:
@@ -67,9 +84,8 @@ public class DealActivity extends AppCompatActivity {
         }
     }
 
-    private void showSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.txt_price), message, Snackbar.LENGTH_LONG);
-        snackbar.show();
+    private void showToastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void clean() {
@@ -81,13 +97,32 @@ public class DealActivity extends AppCompatActivity {
 
     private void saveDeal() {
 
-        String title = txtTitle.getText().toString();
-        String description = txtDescription.getText().toString();
-        String price = txtPrice.getText().toString();
+        deal.setTitle(txtTitle.getText().toString());
+        deal.setDescription(txtDescription.getText().toString());
+        deal.setPrice(txtPrice.getText().toString());
 
-        TravelDeal travelDeal = new TravelDeal(title, description, price, "");
-        mDatabaseReference.push().setValue(travelDeal);
+        if (deal.getId() == null) {
+            mDatabaseReference.push().setValue(deal);
+        } else {
+            mDatabaseReference.child(deal.getId()).setValue(deal);
+        }
+    }
 
+    private void deleteDeal() {
+        if (deal == null) {
+            showToastMessage("Please save deal before deleting");
+        } else {
+            mDatabaseReference.child(deal.getId()).removeValue();
+        }
+    }
 
+    private void backToListActivity() {
+        startActivity(new Intent(DealActivity.this, ListActivity.class));
+    }
+
+    private void enableTextFields(boolean isEnabled) {
+        txtTitle.setEnabled(isEnabled);
+        txtDescription.setEnabled(isEnabled);
+        txtPrice.setEnabled(isEnabled);
     }
 }
