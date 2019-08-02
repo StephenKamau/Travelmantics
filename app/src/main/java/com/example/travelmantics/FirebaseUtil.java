@@ -13,6 +13,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +26,8 @@ public class FirebaseUtil {
     private static FirebaseUtil firebaseUtil;
     public static FirebaseAuth mFirebaseAuth;
     public static FirebaseAuth.AuthStateListener mAuthListener;
+    public static FirebaseStorage mFirebaseStorage;
+    public static StorageReference mStorageReference;
     public static ArrayList<TravelDeal> mDeals;
     private static final int RC_SIGN_IN = 123;
     private static ListActivity caller;
@@ -36,6 +40,7 @@ public class FirebaseUtil {
         if (firebaseUtil == null) {
             firebaseUtil = new FirebaseUtil();
             caller = callerActivity;
+            caller.showMenu();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mFirebaseAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -44,12 +49,14 @@ public class FirebaseUtil {
                     if (mFirebaseAuth.getCurrentUser() == null) {
                         FirebaseUtil.signIn();
                         Toast.makeText(caller.getBaseContext(), "Welcome back", Toast.LENGTH_LONG).show();
-                    }else{
-                        String uid=mFirebaseAuth.getUid();
+                    } else {
+                        String uid = mFirebaseAuth.getUid();
                         checkAdmin(uid);
                     }
                 }
             };
+
+            connectStorage();
         }
 
         mDeals = new ArrayList<>();
@@ -57,12 +64,12 @@ public class FirebaseUtil {
     }
 
     private static void checkAdmin(String uid) {
-        FirebaseUtil.isAdmin=false;
-        DatabaseReference ref=mFirebaseDatabase.getReference().child("administrators").child(uid);
+        FirebaseUtil.isAdmin = false;
+        DatabaseReference ref = mFirebaseDatabase.getReference().child("administrators").child(uid);
         ChildEventListener listener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUtil.isAdmin=true;
+                FirebaseUtil.isAdmin = true;
                 caller.showMenu();
             }
 
@@ -111,5 +118,10 @@ public class FirebaseUtil {
                         .setAvailableProviders(providers)
                         .build(),
                 RC_SIGN_IN);
+    }
+
+    public static void connectStorage(){
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        mStorageReference = mFirebaseStorage.getReference().child("deals_pictures");
     }
 }

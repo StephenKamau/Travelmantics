@@ -26,16 +26,15 @@ import java.util.ArrayList;
 public class ListActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
-    ArrayList<TravelDeal> mTravelDeals;
-    FirebaseDatabase mFirebaseDatabase;
-    DatabaseReference mDatabaseReference;
-    ChildEventListener mChildEventListener;
+//    ArrayList<TravelDeal> mTravelDeals;
+//    FirebaseDatabase mFirebaseDatabase;
+//    DatabaseReference mDatabaseReference;
+//    ChildEventListener mChildEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
     }
 
     @Override
@@ -66,7 +65,7 @@ public class ListActivity extends AppCompatActivity {
         inflater.inflate(R.menu.list_activity_menu, menu);
         MenuItem insertMenu = menu.findItem(R.id.action_insert);
 
-        if (FirebaseUtil.isAdmin == true) {
+        if (FirebaseUtil.isAdmin) {
             insertMenu.setVisible(true);
         } else {
             insertMenu.setVisible(false);
@@ -78,7 +77,10 @@ public class ListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_insert:
-                startActivity(new Intent(ListActivity.this, DealActivity.class));
+                Intent intent = new Intent(ListActivity.this, DealActivity.class);
+                TravelDeal deal = null;
+                intent.putExtra("Deal", deal);
+                startActivity(intent);
                 return true;
 
             case R.id.action_logout:

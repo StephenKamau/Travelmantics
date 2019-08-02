@@ -7,4 +7,5 @@
     <string name="new_deal_menu">New deal</string>
     <string name="logout_menu">Sign out</string>
     <string name="menu_delete">Delete</string>
+    <string name="btn_image_text">Insert Image</string>
 </resources>
