@@ -218,7 +218,7 @@ public class DealActivity extends AppCompatActivity {
 
             if (deal.getImageName() != null && !deal.getImageName().isEmpty()) {
 
-                Log.d("Deal imageName: ",deal.getImageName());
+                Log.d("Deal imageName: ", deal.getImageName());
                 StorageReference picRef = FirebaseUtil.mFirebaseStorage
                         .getReference().child(deal.getImageName());
 
@@ -240,7 +240,6 @@ public class DealActivity extends AppCompatActivity {
 
     private void backToListActivity() {
         startActivity(new Intent(DealActivity.this, ListActivity.class));
-        finish();
     }
 
     private void enableTextFields(boolean isEnabled) {

@@ -40,7 +40,7 @@ public class FirebaseUtil {
         if (firebaseUtil == null) {
             firebaseUtil = new FirebaseUtil();
             caller = callerActivity;
-            caller.showMenu();
+
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mFirebaseAuth = FirebaseAuth.getInstance();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -120,7 +120,7 @@ public class FirebaseUtil {
                 RC_SIGN_IN);
     }
 
-    public static void connectStorage(){
+    public static void connectStorage() {
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference().child("deals_pictures");
     }

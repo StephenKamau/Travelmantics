@@ -19,11 +19,10 @@ public class TravelDeal implements Parcelable {
         this.imageName = imageName;
     }
 
-    public TravelDeal(){
+    public TravelDeal() {
     }
 
-    public TravelDeal(String title, String description, String price, String imageUrl,String imageName) {
-        this.id = id;
+    public TravelDeal(String title, String description, String price, String imageUrl, String imageName) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -37,7 +36,7 @@ public class TravelDeal implements Parcelable {
         description = in.readString();
         price = in.readString();
         imageUrl = in.readString();
-        imageName=in.readString();
+        imageName = in.readString();
     }
 
     public static final Creator<TravelDeal> CREATOR = new Creator<TravelDeal>() {
